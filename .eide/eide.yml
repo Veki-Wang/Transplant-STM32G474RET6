@@ -2,7 +2,7 @@ version: "4.1"
 name: project
 type: ARM
 deviceName: null
-packDir: null
+packDir: .pack/Keil/STM32G4xx_DFP_Revised.1.1.0
 srcDirs: []
 virtualFolder:
   name: <virtual_root>
@@ -62,6 +62,7 @@ targets:
         - USE_HAL_DRIVER
         - STM32G474xx
       incList:
+        - .
         - Core/Inc
         - Drivers/STM32G4xx_HAL_Driver/Inc
         - Drivers/STM32G4xx_HAL_Driver/Inc/Legacy
@@ -73,7 +74,7 @@ targets:
     excludeList: []
     settings:
       debugger: cortex-debug
-    toolchain: AC5
+    toolchain: AC6
     toolchainConfigMap:
       AC5:
         archExtensions: ""
@@ -177,6 +178,49 @@ targets:
                 startAddr: "0x0"
               tag: IROM
         useCustomScatterFile: true
+      AC6:
+        archExtensions: ""
+        cpuType: Cortex-M4
+        floatingPointHardware: single
+        options:
+          version: 3
+          afterBuildTasks: []
+          asm-compiler:
+            $use: asm-auto
+            misc-controls: ""
+          beforeBuildTasks: []
+          c/cpp-compiler:
+            language-c: c99
+            language-cpp: c++11
+            link-time-optimization: false
+            optimization: level-0
+          global:
+            output-debug-info: enable
+            use-microLIB: false
+          linker:
+            $outputTaskExcludes:
+              - .bin
+            misc-controls: --diag_suppress=L6329
+            output-format: elf
+        scatterFilePath: <YOUR_SCATTER_FILE>.sct
+        storageLayout:
+          RAM:
+            - id: 1
+              isChecked: true
+              mem:
+                size: "0x5000"
+                startAddr: "0x20000000"
+              noInit: false
+              tag: IRAM
+          ROM:
+            - id: 1
+              isChecked: true
+              isStartup: true
+              mem:
+                size: "0x10000"
+                startAddr: "0x08000000"
+              tag: IROM
+        useCustomScatterFile: false
     uploadConfigMap:
       JLink:
         baseAddr: ""
@@ -187,4 +231,9 @@ targets:
         otherCmds: ""
         proType: 1
         speed: 8000
-    uploader: JLink
+      OpenOCD:
+        baseAddr: "0x08000000"
+        bin: ""
+        interface: stlink
+        target: stm32f1x
+    uploader: OpenOCD
