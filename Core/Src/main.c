@@ -23,6 +23,8 @@
 /* USER CODE BEGIN Includes */
 #include "OLED.h"
 #include "task_key.h"
+#include "task_receive_t_data.h"
+#include "QD4310.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -69,6 +71,8 @@ scan_config scan_init = {
 float now_yaw =0;
 uint8_t rx_yaw =0;
 uint8_t car_rx_byte = 0;
+QD4310_t Motor_0 = {.id = 0, .huart = &huart1};
+QD4310_t Motor_1 = {.id = 1, .huart = &huart2};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -125,8 +129,11 @@ int main(void)
   MX_USART3_UART_Init();
   MX_I2C2_Init();
   /* USER CODE BEGIN 2 */
-  OLED_Init();
-  uint32_t cnt = 0;
+  task_oled_and_init();
+  QD4310_Enable(&Motor_0);         // 使能电机
+  HAL_Delay(10);
+  QD4310_SetSpeed(&Motor_0, 0.0f); // 设置电机转速为0rpm
+  HAL_Delay(10);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -136,10 +143,18 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    OLED_Clear();
-    OLED_ShowString(0, 0, "cnt:", OLED_8X16);
-    OLED_ShowNum(48,0,cnt,5,OLED_8X16);
-    OLED_Update();
+    oled_task();
+    key_task();
+    Vision_Task();//是否发射激光检测函数
+    if(scan_init.start_flag == 1)
+    {
+      if(scan_init.question_num == 1 || scan_init.question_num == 2 || scan_init.question_num == 3)
+      {
+        // 1/2号任务：仅外环PID控制电机
+        PID_Control_Outer_Only();
+      }
+    }
+    task_scan();
   }
   /* USER CODE END 3 */
 }

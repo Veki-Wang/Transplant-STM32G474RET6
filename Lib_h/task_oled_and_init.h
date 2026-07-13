@@ -4,11 +4,8 @@
 #include "stm32g4xx_hal.h"
 #include <string.h>
 #include <stdint.h>
-#include  "main.h"
-#include "task_receive_t_data.h"
-#include "stm32g4xx_it.h"
-#include "OLED.h" 
-#include "task_key.h" 
+#include "OLED.h"
+#include "main.h"
   
 
 typedef  struct

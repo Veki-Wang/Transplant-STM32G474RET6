@@ -1,5 +1,7 @@
 #include "task_pid.h"
+#include "QD4310.h"
 #include <math.h>
+#include "main.h"
 
 // Y轴单独的PID控制器实例
 PID_Controller_t pid_control_y = {0};
@@ -124,14 +126,15 @@ void PID_Control_Outer_Only(void)// 这个函数只计算外环PID，并直接�
     {
         PID_Outer_Task();
 
-        uint16_t motor_speed = (uint16_t)fabsf(pid_control_x.output);
-        uint8_t  motor_dir   = (pid_control_x.output >= 0.0f) ? 1 : 0;
-        //Emm_V5_Vel_Control(1, motor_dir, motor_speed, 0, 0);
+        uint16_t motor_speed1 = (uint16_t)fabsf(pid_control_x.output);
+        uint8_t  motor_dir1   = (pid_control_x.output >= 0.0f) ? 1 : 0;
+        QD4310_SetSpeed(&Motor_0, (float)motor_speed1);
 
-        static float servo_pos_y = 500.0f;
-        servo_pos_y += pid_control_y.output;
-        servo_pos = servo_pos_y;
-        //Set_Servo_Y_Pos(servo_pos_y, pid_control_y.output);
+        uint16_t motor_speed2 = (uint16_t)fabsf(pid_control_y.output);
+        uint8_t  motor_dir2   = (pid_control_y.output >= 0.0f) ? 1 : 0;
+        QD4310_SetSpeed(&Motor_1, (float)motor_speed2);
+
+        
         flag.data_valid = 0; // 外环计算完成，重置数据有效标志
     }
 }

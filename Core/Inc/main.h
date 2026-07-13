@@ -34,7 +34,8 @@ extern "C" {
 #include "task_oled_and_init.h"
 #include "task_receive_t_data.h"
 #include "task_key.h"
-#include "task_pid.h" 
+#include "task_pid.h"
+#include "QD4310.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -81,7 +82,8 @@ extern scan_config scan_init;
 extern float now_yaw;
 extern uint8_t rx_yaw;
 extern uint8_t car_rx_byte;
-extern uint8_t pid_change;
+extern QD4310_t Motor_0;
+extern QD4310_t Motor_1;
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

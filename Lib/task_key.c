@@ -58,30 +58,30 @@ void Key_LoopDetect(void)
 }
 
 
-// void key_task(void)
-// {
-//     Key_LoopDetect();
-//     uint8_t keyValue = Key_GetCode();  
+void key_task(void)
+{
+    Key_LoopDetect();
+    uint8_t keyValue = Key_GetCode();  
 
-//     if (keyValue == 1)
-//     {
-//     scan_init.question_num++;
-//     if (scan_init.question_num > 3)
-//     {
-//         scan_init.question_num = 1;
+    if (keyValue == 1)
+    {
+    scan_init.question_num++;
+    if (scan_init.question_num > 3)
+    {
+        scan_init.question_num = 1;
         
-//     }
-//     }
-//     else if (keyValue == 2)
-//     {
-//         scan_init.start_flag = !scan_init.start_flag;
-//     }
-//     else if (keyValue == 3)
-//     {
-//         scan_init.scan++;
-//         if (scan_init.scan > 2)
-//         {
-//             scan_init.scan = 0;
-//         }
-//     }
-// }
+    }
+    }
+    else if (keyValue == 2)
+    {
+        scan_init.start_flag = !scan_init.start_flag;
+    }
+    else if (keyValue == 3)
+    {
+        scan_init.scan++;
+        if (scan_init.scan > 2)
+        {
+            scan_init.scan = 0;
+        }
+    }
+}
