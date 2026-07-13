@@ -50,7 +50,25 @@ UART_HandleTypeDef huart2;
 UART_HandleTypeDef huart3;
 
 /* USER CODE BEGIN PV */
+Start_FlagStatus flag = {
+  .stop_scan = 0,
+  .initial_yaw = 0.0f,
+  .first_frame_received = 0,
+  .data_valid = 0,
+  .flag_yaw = 0,
+  .pid_change = 0,
+};
 
+scan_config scan_init = {
+    .scan = 0,
+    .question_num = 0,
+    .start_flag = 0,
+    .scan_speed = 240,
+};
+
+float now_yaw =0;
+uint8_t rx_yaw =0;
+uint8_t car_rx_byte = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -108,6 +126,7 @@ int main(void)
   MX_I2C2_Init();
   /* USER CODE BEGIN 2 */
   OLED_Init();
+  uint32_t cnt = 0;
   /* USER CODE END 2 */
 
   /* Infinite loop */

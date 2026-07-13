@@ -31,7 +31,10 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "task_oled_and_init.h"
+#include "task_receive_t_data.h"
+#include "task_key.h"
+#include "task_pid.h" 
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -53,7 +56,32 @@ extern "C" {
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
+typedef struct
+{
+  float initial_yaw;//初始yaw值和第一帧标志
+  uint8_t first_frame_received;
+  uint8_t data_valid;
+  float flag_yaw;
+  uint8_t stop_scan;
+  uint8_t pid_change;
+}Start_FlagStatus;
 
+extern Start_FlagStatus flag;
+
+typedef struct
+{
+    uint8_t start_flag;
+    uint8_t question_num;
+    uint8_t scan;
+    uint8_t scan_speed;
+}scan_config;
+
+extern scan_config scan_init;
+
+extern float now_yaw;
+extern uint8_t rx_yaw;
+extern uint8_t car_rx_byte;
+extern uint8_t pid_change;
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

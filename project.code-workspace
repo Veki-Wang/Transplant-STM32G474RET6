@@ -42,7 +42,8 @@
             "cschlosser.doxdocgen",
             "ms-vscode.vscode-serial-monitor",
             "dan-c-underwood.arm",
-            "marus25.cortex-debug"
+            "marus25.cortex-debug",
+            "doubao.doubao-app-share-vscode-plugin"
         ]
     }
 }
