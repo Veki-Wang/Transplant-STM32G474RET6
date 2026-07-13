@@ -22,6 +22,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "OLED.h"
+#include "task_key.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -117,7 +118,8 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
     OLED_Clear();
-    OLED_ShowString(0, 0, "1.Gimbal", OLED_8X16);
+    OLED_ShowString(0, 0, "cnt:", OLED_8X16);
+    OLED_ShowNum(48,0,cnt,5,OLED_8X16);
     OLED_Update();
   }
   /* USER CODE END 3 */
@@ -481,7 +483,7 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pins : key1_Pin key2_Pin key3_Pin */
   GPIO_InitStruct.Pin = key1_Pin|key2_Pin|key3_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pin : laser_Pin */
