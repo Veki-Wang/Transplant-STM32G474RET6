@@ -1,7 +1,6 @@
 #ifndef TASK_RECEIVE_T_DATA_H
 #define TASK_RECEIVE_T_DATA_H
 
-#include "huart3_base.h"
 
 
 #define LASER_ON() HAL_GPIO_WritePin(laser_GPIO_Port, laser_Pin, GPIO_PIN_SET)
