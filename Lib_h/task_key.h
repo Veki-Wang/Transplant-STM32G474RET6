@@ -1,9 +1,6 @@
 #ifndef _TASK_KEY_H_
 #define _TASK_KEY_H_
 
-#include "main.h"
-#include "stm32g4xx_hal.h"
-//#include "task_oled_and_init.h"
 
 #define KEY1_Pin            GPIO_PIN_12
 #define KEY1_GPIO_Port      GPIOB

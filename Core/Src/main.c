@@ -21,10 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "OLED.h"
-#include "task_key.h"
-#include "task_receive_t_data.h"
-#include "QD4310.h"
+#include "app_common.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/

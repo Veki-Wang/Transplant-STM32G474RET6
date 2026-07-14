@@ -1,7 +1,7 @@
 #ifndef _HUART3_BASE_H//nano2->3
 #define _HUART3_BASE_H
 
-#include "main.h"
+#include "app_common.h"
 
 extern UART_HandleTypeDef huart3;
 

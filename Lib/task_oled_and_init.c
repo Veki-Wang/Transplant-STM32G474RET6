@@ -1,6 +1,4 @@
-#include "task_oled_and_init.h"
-#include "main.h"
-#include "task_pid.h"
+#include "app_common.h"
 
 oled_config oled_init ={
     .open_init_oled = "wzl - hello",

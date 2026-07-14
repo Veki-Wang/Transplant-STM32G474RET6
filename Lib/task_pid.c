@@ -1,7 +1,5 @@
-#include "task_pid.h"
-#include "QD4310.h"
-#include <math.h>
-#include "main.h"
+#include "app_common.h"
+
 
 // Y轴单独的PID控制器实例
 PID_Controller_t pid_control_y = {0};

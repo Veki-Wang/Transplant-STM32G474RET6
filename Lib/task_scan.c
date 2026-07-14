@@ -1,4 +1,4 @@
-#include "task_scan.h"
+#include "app_common.h"
 
 // - 如果 SCAN==1 或 SCAN==2 且误差为 0 则进入扫描模式。
 // - 如果 SCAN==1/2 且误差不为 0，则停止扫描（设置 SCAN=0），进入 PID 跟踪。

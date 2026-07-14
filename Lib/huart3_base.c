@@ -1,5 +1,5 @@
 #include "huart3_base.h"//nano2->3
-#include "task_receive_t_data.h"
+#include "app_common.h"
 // ===================== 内部工具函数：串口发送单字节 =====================
 void USART3_Send_Byte(uint8_t byte)
 {
