@@ -78,33 +78,31 @@ void PID_Outer_Task(void)
     }
     else if(scan_init.question_num == 3 && flag.pid_change == 1)
     {
-        if(vision_data.car_mode == 1)//圆弧，车速较慢，前馈增益可以适当大一些，提升响应速度
+        static const float kf_table[] = {
+            0.0f,   // mode 0：默认，关闭前馈
+            0.6f,   // mode 1：圆弧
+            2.8f,   // mode 2：第一个转弯
+            0.45f,  // mode 3：直线
+            2.8f,   // mode 4：第二个转弯
+            3.0f    // mode 5
+        };
+        const uint8_t table_size = sizeof(kf_table) / sizeof(kf_table[0]);
+        uint8_t cur_mode = vision_data.car_mode;
+
+        // 查表赋值，超出数组范围则使用默认值 0
+        if(cur_mode < table_size)
         {
-            pid_control_x.Kf_e = 0.6f;//0.8f; // 根据经验调整前馈增益，过大可能引起震荡，过小可能响应不足
+            pid_control_x.Kf_e = kf_table[cur_mode];
         }
-        else if(vision_data.car_mode == 2)//第一个转弯
-        {
-            pid_control_x.Kf_e = 2.8f;//0.4f;
-        }
-        else if(vision_data.car_mode == 3)//直线，车速较快，前馈增益可以适当小一些，避免过冲
-        {
-            pid_control_x.Kf_e = 0.45f;
-        }
-        else if(vision_data.car_mode == 4)//第二个转弯，车速较慢，前馈增益可以适当大一些，提升响应速度
-        {
-            pid_control_x.Kf_e = 2.8f;//0.8f;
-        }
-        else if(vision_data.car_mode == 5)//第二个转弯，车速较慢，前馈增益可以适当大一些，提升响应速度
-        {
-            pid_control_x.Kf_e = 3.0f;//0.8f;
-        }
-        else//其他情况（如停车等待等），关闭前馈，避免不必要的输出
+        else
         {
             pid_control_x.Kf_e = 0.0f;
         }
-            pid_control_x.Kp = 0.33f;//0.98f; 
-            pid_control_x.Ki = 0.0f;
-            pid_control_x.Kd = 0.3f;
+
+        // 题目3 固定 PID 参数
+        pid_control_x.Kp = 0.33f;
+        pid_control_x.Ki = 0.0f;
+        pid_control_x.Kd = 0.3f;
     }
     PID_Compute(&pid_control_x, vision_data.pos_x);
 }
