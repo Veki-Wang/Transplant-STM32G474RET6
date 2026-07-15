@@ -5,6 +5,20 @@
 PID_Controller_t pid_control_y = {0};
 PID_Controller_t pid_control_x = {0};
 
+/* PID 默认参数 — 上电初始化 & 菜单下发时同步更新 */
+PID_Params_t pid_params_y = { -0.8f, 0.0f, -0.01f };
+PID_Params_t pid_params_x = {  0.36f, 0.0f,  0.0f };
+
+/* ===================== X轴前馈系数表 (可通过菜单动态调参) ===================== */
+float kf_table[6] = {
+    0.0f,   // mode 0: 默认，关闭前馈
+    0.6f,   // mode 1: 圆弧
+    2.8f,   // mode 2: 第一个转弯
+    0.45f,  // mode 3: 直线
+    2.8f,   // mode 4: 第二个转弯
+    3.0f    // mode 5
+};
+
 /*PID的算法实现*/
 /******************************************************************************************/
 void Control_PID_Init(PID_Controller_t *pid, float kp, float ki, float kd, float min_output, float max_output)
@@ -78,14 +92,6 @@ void PID_Outer_Task(void)
     }
     else if(scan_init.question_num == 3 && flag.pid_change == 1)
     {
-        static const float kf_table[] = {
-            0.0f,   // mode 0：默认，关闭前馈
-            0.6f,   // mode 1：圆弧
-            2.8f,   // mode 2：第一个转弯
-            0.45f,  // mode 3：直线
-            2.8f,   // mode 4：第二个转弯
-            3.0f    // mode 5
-        };
         const uint8_t table_size = sizeof(kf_table) / sizeof(kf_table[0]);
         uint8_t cur_mode = vision_data.car_mode;
 
@@ -99,10 +105,8 @@ void PID_Outer_Task(void)
             pid_control_x.Kf_e = 0.0f;
         }
 
-        // 题目3 固定 PID 参数
-        pid_control_x.Kp = 0.33f;
-        pid_control_x.Ki = 0.0f;
-        pid_control_x.Kd = 0.3f;
+        // 题目3 固定 PID 参数 (但允许菜单通过串口覆盖)
+        // pid_control_x 的 Kp/Ki/Kd 由 gimbal_comm_data 通过 GimbalComm_ApplyRecvData 写入
     }
     PID_Compute(&pid_control_x, vision_data.pos_x);
 }

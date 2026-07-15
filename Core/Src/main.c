@@ -131,6 +131,12 @@ int main(void)
   HAL_Delay(10);
   QD4310_SetSpeed(&Motor_0, 0.0f); // 设置电机转速为0rpm
   HAL_Delay(10);
+  /* PID 默认参数初始化 — 菜单在此基础上下发修改 */
+  Control_PID_Init(&pid_control_y, pid_params_y.kp, pid_params_y.ki, pid_params_y.kd, -100.0f, 100.0f);
+  Control_PID_Init(&pid_control_x, pid_params_x.kp, pid_params_x.ki, pid_params_x.kd, -500.0f, 500.0f);
+
+  GimbalComm_Init();               // 启动 UART5 接收中断 (菜单 ↔ 云台)
+  GimbalComm_Send();               // 上电主动发送一次当前 PID/前馈给菜单
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -140,7 +146,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    oled_task();
+    //oled_task();
     key_task();
     Vision_Task();//是否发射激光检测函数
     if(scan_init.start_flag == 1)
@@ -152,6 +158,33 @@ int main(void)
       }
     }
     task_scan();
+
+    /* 云台通讯: 收到菜单发来的调参数据 → 应用并回传当前值 */
+    if (gimbal_recv_flag)
+    {
+        GimbalComm_ApplyRecvData();   // 写入 pid_control_x/y 和 kf_table
+        GimbalComm_Send();            // 回传当前值给菜单 (E9...9E)
+    }
+
+    /* ===== DEBUG: 显示 PID 参数，验证通信 ===== */
+    {
+        static uint32_t last_debug_tick = 0;
+        if (HAL_GetTick() - last_debug_tick > 200)  // 200ms 刷新
+        {
+            last_debug_tick = HAL_GetTick();
+            OLED_Clear();
+            OLED_ShowString(0, 0,  "XKp:", OLED_8X16);
+            OLED_ShowFloatNum(32, 0, pid_control_x.Kp, 3, 2, OLED_8X16);
+            OLED_ShowString(0, 16, "XKi:", OLED_8X16);
+            OLED_ShowFloatNum(32, 16, pid_control_x.Ki, 3, 2, OLED_8X16);
+            OLED_ShowString(0, 32, "YKp:", OLED_8X16);
+            OLED_ShowFloatNum(32, 32, pid_control_y.Kp, 3, 2, OLED_8X16);
+            OLED_ShowString(0, 48, "YKi:", OLED_8X16);
+            OLED_ShowFloatNum(32, 48, pid_control_y.Ki, 3, 2, OLED_8X16);
+            OLED_Update();
+        }
+    }
+    /* ===== DEBUG END ===== */
   }
   /* USER CODE END 3 */
 }
