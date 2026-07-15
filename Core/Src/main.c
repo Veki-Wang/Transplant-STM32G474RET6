@@ -128,8 +128,10 @@ int main(void)
   /* USER CODE BEGIN 2 */
   task_oled_and_init();
   QD4310_Enable(&Motor_0);         // 使能电机
+  QD4310_Enable(&Motor_1);
   HAL_Delay(10);
   QD4310_SetSpeed(&Motor_0, 0.0f); // 设置电机转速为0rpm
+  QD4310_SetSpeed(&Motor_1, 0.0f);
   HAL_Delay(10);
   /* PID 默认参数初始化 — 菜单在此基础上下发修改 */
   Control_PID_Init(&pid_control_y, pid_params_y.kp, pid_params_y.ki, pid_params_y.kd, -100.0f, 100.0f);
@@ -149,6 +151,16 @@ int main(void)
     //oled_task();
     key_task();
     Vision_Task();//是否发射激光检测函数
+    for (int i = 0; i <= 100; i++)
+    {
+        QD4310_SetSpeed(&Motor_0, (float)i);
+        HAL_Delay(50);
+    }
+    for (int i = 100; i >= 0; i--)
+    {
+        QD4310_SetSpeed(&Motor_0, (float)i);
+        HAL_Delay(50);
+    }
     if(scan_init.start_flag == 1)
     {
       if(scan_init.question_num == 1 || scan_init.question_num == 2 || scan_init.question_num == 3)
